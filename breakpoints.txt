@@ -1,0 +1,5 @@
+- Điện thoại: 750 px (iPhone 6)
+
+- mobile: 768px đến 1024px
+- tablet: 1024px đến 1200px
+- pc: trên 1200px

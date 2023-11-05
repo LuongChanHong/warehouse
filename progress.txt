@@ -1,0 +1,2 @@
+- đang thử deploy firebase bằng project mới
+- đang tìm breakpoint nào là thực tế với iphone 11
