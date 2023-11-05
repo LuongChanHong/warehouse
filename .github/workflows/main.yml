@@ -1,0 +1,111 @@
+name: Firebase Deployment
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2.3.2
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        env:
+          CI: false
+        run: npm run build
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2.3.2
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+# Skip to content
+
+# Search…
+# All gists
+# Back to GitHub
+# @LuongChanHong
+# @luazhizhan
+# luazhizhan/main.yml
+# Last active 3 years ago • Report abuse
+# Code
+# Revisions
+# 2
+# <script src="https://gist.github.com/luazhizhan/635bb178f6e9ca60115c38893c467b8d.js"></script>
+# GitHub Action YAML file to deploy multiple sites to Firebase Hosting.
+# main.yml
+# name: Firebase hosting
+
+# on:
+#   push:
+#     branches: [ master, staging ]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#     - uses: actions/checkout@v2
+
+#     - name: Install firebase tools
+#       run: |
+#         sudo npm install -g firebase-tools
+#         firebase use <FIREBASE PROJECT ID> --token ${{ secrets.FIREBASE_TOKEN }}
+
+#     - name: Build website
+#       run: |
+#         yarn
+#         yarn build
+
+#     - name: Deploy to staging site
+#       if: github.ref == 'refs/heads/staging'
+#       run: firebase deploy --only hosting:<TARGET NAME> --non-interactive --token ${{ secrets.FIREBASE_TOKEN }} -m "RunID ${{ github.run_id }} Commit SHA ${{ github.sha }}"
+
+#     - name: Deploy to production site
+#       if: github.ref == 'refs/heads/master'
+#       run: firebase deploy --only hosting:<TARGET NAME> --non-interactive --token ${{ secrets.FIREBASE_TOKEN }} -m "RunID ${{ github.run_id }} Commit SHA ${{ github.sha }}"
+
+#     - name: Archive build Artifact
+#       uses: actions/upload-artifact@master
+#       with:
+#         path: build
+# @LuongChanHong
+
+# Leave a comment
+# No file chosen
+# Attach files by dragging & dropping, selecting or pasting them.
+# Footer
+# © 2023 GitHub, Inc.
+# Footer navigation
+# Terms
+# Privacy
+# Security
+# Status
+# Docs
+# Contact GitHub
+# Pricing
+# API
+# Training
+# Blog
+# About
